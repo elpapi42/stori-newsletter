@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = ["elpapi42 <whitman-2@hotmail.com>"]
+readme = "README.md"
+packages = [{include = "source"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.105.0"
+pydantic = {extras = ["email"], version = "^2.5.2"}
+pydantic-settings = "^2.1.0"
+uvicorn = "^0.25.0"
+motor = "^3.3.2"
+python-multipart = "^0.0.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
