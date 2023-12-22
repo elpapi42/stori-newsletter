@@ -1,17 +1,19 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from source.domain.newsletter import Newsletter
 from source.ports.newsletter_repository import NewsletterRepository
 from source.ports.newsletter_dispatcher import NewsletterDispatcher
+from source.application import exceptions
 
 
 @dataclass
 class SendNewsletterService():
     newsletter_repo: NewsletterRepository
-    email_dispatcher: NewsletterDispatcher
+    newsletter_dispatcher: NewsletterDispatcher
 
     async def execute(self, id: UUID) -> None:
         newsletter = await self.newsletter_repo.get(id)
+        if newsletter is None:
+            raise exceptions.NotFound(f"Newsletter with id {id} not found")
 
-        await self.email_dispatcher.dispatch(newsletter)
+        await self.newsletter_dispatcher.dispatch(newsletter)

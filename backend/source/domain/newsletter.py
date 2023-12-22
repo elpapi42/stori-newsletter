@@ -1,6 +1,6 @@
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 from source.domain.email_address import EmailAddress
 
@@ -12,5 +12,4 @@ class Newsletter(BaseModel):
     body: str = ""
     file_uri: str | None = None
 
-    class Config:
-        validate_assignment = True
+    model_config = ConfigDict(validate_assignment=True)

@@ -10,7 +10,7 @@ class NewsletterRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def get(self, id: UUID) -> Newsletter:
+    async def get(self, id: UUID) -> Newsletter | None:
         raise NotImplementedError
 
     @abstractmethod

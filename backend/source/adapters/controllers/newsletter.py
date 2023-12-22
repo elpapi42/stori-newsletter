@@ -10,6 +10,7 @@ from source.application.send_newsletter import SendNewsletterService
 from source.adapters.newsletter_repository.fake import FakeNewsletterRepository
 from source.adapters.file_storage.local import LocalFileStorage
 from source.adapters.newsletter_dispatcher.fake import FakeNewsletterDispatcher
+from source.application import exceptions
 
 
 router = APIRouter()
@@ -37,6 +38,7 @@ async def create_newsletter(data: CreateNewsletterInputDTO):
 
 
 class UpdateNewsletterInputDTO(BaseModel):
+    title: str
     audience: list[EmailStr]
     body: str
 
@@ -45,11 +47,15 @@ class UpdateNewsletterInputDTO(BaseModel):
 async def update_newsletter(data: UpdateNewsletterInputDTO, newsletter_id: UUID):
     update_newsletter_service = UpdateNewsletterService(newsletter_repo)
 
-    await update_newsletter_service.execute(
-        id=newsletter_id,
-        audience=data.audience,
-        body=data.body
-    )
+    try:
+        await update_newsletter_service.execute(
+            id=newsletter_id,
+            title=data.title,
+            audience=data.audience,
+            body=data.body
+        )
+    except exceptions.NotFound:
+        raise HTTPException(404, detail="Newsletter not found")
 
     return Response(status_code=204)
 
@@ -71,11 +77,14 @@ async def create_newsletter_file(file: UploadFile, newsletter_id: UUID):
     if not file_ext:
         raise HTTPException(400, detail="Invalid file type")
 
-    await add_newsletter_file_service.execute(
-        newsletter_id=newsletter_id,
-        file=file.file,
-        ext=file_ext
-    )
+    try:
+        await add_newsletter_file_service.execute(
+            newsletter_id=newsletter_id,
+            file=file.file,
+            ext=file_ext
+        )
+    except exceptions.NotFound:
+        raise HTTPException(404, detail="Newsletter not found")
 
     return Response(status_code=204)
 
@@ -86,6 +95,9 @@ async def send_newsletter(newsletter_id: UUID):
     newsletter_dispatcher = FakeNewsletterDispatcher()
     send_newsletter_service = SendNewsletterService(newsletter_repo, newsletter_dispatcher)
 
-    await send_newsletter_service.execute(id=newsletter_id)
+    try:
+        await send_newsletter_service.execute(id=newsletter_id)
+    except exceptions.NotFound:
+        raise HTTPException(404, detail="Newsletter not found")
 
     return Response(status_code=204)
