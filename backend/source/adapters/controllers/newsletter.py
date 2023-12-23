@@ -7,16 +7,13 @@ from source.application.create_newsletter import CreateNewsletterService
 from source.application.update_newsletter import UpdateNewsletterService
 from source.application.add_newsletter_file import AddNewsletterFileService
 from source.application.send_newsletter import SendNewsletterService
-from source.adapters.newsletter_repository.fake import FakeNewsletterRepository
+from source.adapters.newsletter_repository.mongo import MongoNewsletterRepository
 from source.adapters.file_storage.local import LocalFileStorage
 from source.adapters.newsletter_dispatcher.fake import FakeNewsletterDispatcher
 from source.application import exceptions
 
 
 router = APIRouter()
-
-
-newsletter_repo = FakeNewsletterRepository()
 
 
 class CreateNewsletterInputDTO(BaseModel):
@@ -29,6 +26,7 @@ class CreateNewsletterOutputDTO(BaseModel):
 
 @router.post("/newsletter", response_model=CreateNewsletterOutputDTO, status_code=201)
 async def create_newsletter(data: CreateNewsletterInputDTO):
+    newsletter_repo = MongoNewsletterRepository()
     create_newsletter_service = CreateNewsletterService(newsletter_repo)
 
     newsletter_id = await create_newsletter_service.execute(data.title)
@@ -45,6 +43,7 @@ class UpdateNewsletterInputDTO(BaseModel):
 
 @router.patch("/newsletter/{newsletter_id}", status_code=204)
 async def update_newsletter(data: UpdateNewsletterInputDTO, newsletter_id: UUID):
+    newsletter_repo = MongoNewsletterRepository()
     update_newsletter_service = UpdateNewsletterService(newsletter_repo)
 
     try:
@@ -70,6 +69,7 @@ mime_ext_mapping = {
 
 @router.post("/newsletter/{newsletter_id}/file", status_code=204)
 async def create_newsletter_file(file: UploadFile, newsletter_id: UUID):
+    newsletter_repo = MongoNewsletterRepository()
     file_storage = LocalFileStorage()
     add_newsletter_file_service = AddNewsletterFileService(newsletter_repo, file_storage)
 
@@ -92,6 +92,7 @@ async def create_newsletter_file(file: UploadFile, newsletter_id: UUID):
 
 @router.post("/newsletter/{newsletter_id}/send", status_code=204)
 async def send_newsletter(newsletter_id: UUID):
+    newsletter_repo = MongoNewsletterRepository()
     newsletter_dispatcher = FakeNewsletterDispatcher()
     send_newsletter_service = SendNewsletterService(newsletter_repo, newsletter_dispatcher)
 
