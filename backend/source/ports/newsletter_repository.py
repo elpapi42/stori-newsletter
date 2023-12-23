@@ -12,7 +12,3 @@ class NewsletterRepository(ABC):
     @abstractmethod
     async def get(self, id: UUID) -> Newsletter | None:
         raise NotImplementedError
-
-    @abstractmethod
-    async def update(self, newsletter: Newsletter) -> None:
-        raise NotImplementedError

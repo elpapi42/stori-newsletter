@@ -13,6 +13,3 @@ class FakeNewsletterRepository(NewsletterRepository):
 
     async def get(self, id: UUID) -> Newsletter | None:
         return self.index.get(id)
-
-    async def update(self, newsletter: Newsletter) -> None:
-        self.index[newsletter.id] = newsletter

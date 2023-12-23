@@ -19,4 +19,4 @@ class UpdateNewsletterService():
         newsletter.audience = [EmailAddress(value=email) for email in audience]
         newsletter.body = body
 
-        await self.newsletter_repo.update(newsletter)
+        await self.newsletter_repo.add(newsletter)

@@ -21,4 +21,4 @@ class AddNewsletterFileService():
 
         newsletter.file_uri = file_uri
 
-        await self.newsletter_repo.update(newsletter)
+        await self.newsletter_repo.add(newsletter)
