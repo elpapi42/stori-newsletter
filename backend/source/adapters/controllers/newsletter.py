@@ -69,7 +69,6 @@ async def update_newsletter(data: UpdateNewsletterInputDTO, newsletter_id: UUID)
 mime_ext_mapping = {
     "image/jpeg": "jpg",
     "image/png": "png",
-    "application/pdf": "pdf",
 }
 
 
