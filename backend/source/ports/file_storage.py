@@ -9,6 +9,6 @@ class FileStorage(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_by_uri(self, uri: str) -> IOBase:
+    async def get_by_uri(self, uri: str) -> IOBase | None:
         """Returns file-like object"""
         raise NotImplementedError

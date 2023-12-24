@@ -9,5 +9,5 @@ class FakeFileStorage(FileStorage):
     async def save(self, id: str, file: IOBase, ext: str) -> str:
         return "/dummy/uri"
 
-    async def get_by_uri(self, uri: str) -> IOBase:
+    async def get_by_uri(self, uri: str) -> IOBase | None:
         return BytesIO(b"dummy file content")

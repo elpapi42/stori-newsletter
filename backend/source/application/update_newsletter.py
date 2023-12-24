@@ -10,7 +10,7 @@ from source.application import exceptions
 class UpdateNewsletterService():
     newsletter_repo: NewsletterRepository
 
-    async def execute(self, id: UUID, title: str, audience: list[str], body: str) -> None:
+    async def execute(self, id: UUID, title: str, audience: list[str], body: str, file_name: str | None) -> None:
         newsletter = await self.newsletter_repo.get(id)
         if newsletter is None:
             raise exceptions.NotFound(f"Newsletter with id {id} not found")
@@ -18,5 +18,6 @@ class UpdateNewsletterService():
         newsletter.title = title
         newsletter.audience = [EmailAddress(value=email) for email in audience]
         newsletter.body = body
+        newsletter.file_name = file_name
 
         await self.newsletter_repo.add(newsletter)

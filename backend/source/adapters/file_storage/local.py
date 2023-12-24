@@ -21,5 +21,8 @@ class LocalFileStorage(FileStorage):
                 local_file.write(batch)
         return file_path
 
-    async def get_by_uri(self, uri: str) -> IOBase:
+    async def get_by_uri(self, uri: str) -> IOBase | None:
+        if not os.path.exists(uri):
+            return None
+
         return open(uri, 'rb')

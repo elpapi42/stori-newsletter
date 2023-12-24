@@ -7,8 +7,7 @@ import { useEffect } from 'react';
 
 const REGEX_EMAIL = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-export default function AudienceInput({ onChange }) {
-  const [emails, setEmails] = useState([]);
+export default function AudienceInput({ emails, setEmails }) {
   const [inputEmail, setInputEmail] = useState('');
 
   const onAddEmail = () => {
@@ -26,10 +25,6 @@ export default function AudienceInput({ onChange }) {
 
     setEmails([...emails, inputEmail]);
   }
-
-  useEffect(() => {
-    onChange(emails);
-  }, [emails]);
 
   return (
     <div className="flex flex-row space-x-2 flex-wrap">

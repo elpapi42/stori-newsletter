@@ -73,7 +73,9 @@ export default function NewslettersIndex() {
           Newsletters
         </div>
         <div className="flex flex-row space-x-2">
-          <Input placeholder="Title" value={createNewsletterValue} onChange={(e) => setCreateNewsletterValue(e.target.value)}/>
+          <div>
+            <Input placeholder="Title" value={createNewsletterValue} onChange={(e) => setCreateNewsletterValue(e.target.value)}/>
+          </div>
           <Button text="Create Newsletter" onClick={onCreateNewsletter}/>
         </div>
       </div>

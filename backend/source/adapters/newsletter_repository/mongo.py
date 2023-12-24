@@ -35,6 +35,7 @@ class MongoNewsletterRepository(NewsletterRepository):
             audience=[EmailAddress(value=address) for address in newsletter["audience"]],
             body=newsletter["body"],
             file_uri=newsletter["file_uri"],
+            file_name=newsletter["file_name"],
             created_at=newsletter["created_at"],
         )
 
@@ -47,6 +48,7 @@ class MongoNewsletterRepository(NewsletterRepository):
                 audience=[EmailAddress(value=address) for address in newsletter["audience"]],
                 body=newsletter["body"],
                 file_uri=newsletter["file_uri"],
+                file_name=newsletter["file_name"],
                 created_at=newsletter["created_at"],
             )
             for newsletter in newsletters
