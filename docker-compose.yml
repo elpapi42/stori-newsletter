@@ -37,3 +37,14 @@ services:
     depends_on:
       - mongo
     container_name: newsletter-backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: newsletter-frontend
+    environment:
+      - NODE_ENV=production
+    ports:
+      - 3000:3000
+    container_name: newsletter-frontend

@@ -7,7 +7,7 @@ from source.domain.email_address import EmailAddress
 
 class Newsletter(BaseModel):
     id: UUID = Field(default_factory=uuid4)
-    title: str
+    title: str = Field(min_length=1)
     audience: list[EmailAddress] = []
     body: str = ""
     file_uri: str | None = None

@@ -1,12 +1,13 @@
 from uuid import UUID
 
 from fastapi import APIRouter, Response, UploadFile, HTTPException
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 from source.application.create_newsletter import CreateNewsletterService
 from source.application.update_newsletter import UpdateNewsletterService
 from source.application.add_newsletter_file import AddNewsletterFileService
 from source.application.send_newsletter import SendNewsletterService
+from source.application.get_all_newsletters import GetAllNewslettersService
 from source.adapters.newsletter_repository.mongo import MongoNewsletterRepository
 from source.adapters.file_storage.local import LocalFileStorage
 from source.adapters.newsletter_dispatcher.fake import FakeNewsletterDispatcher
@@ -17,7 +18,7 @@ router = APIRouter()
 
 
 class CreateNewsletterInputDTO(BaseModel):
-    title: str
+    title: str = Field(min_length=1)
 
 
 class CreateNewsletterOutputDTO(BaseModel):
@@ -102,3 +103,31 @@ async def send_newsletter(newsletter_id: UUID):
         raise HTTPException(404, detail="Newsletter not found")
 
     return Response(status_code=204)
+
+
+
+class GetAllNewslettersOutputDTO(BaseModel):
+    id: UUID
+    title: str
+    audience: list[str]
+    body: str
+    file_uri: str | None
+
+
+@router.get("/newsletter", status_code=200)
+async def get_all_newsletters():
+    newsletter_repo = MongoNewsletterRepository()
+    get_all_newsletters_service = GetAllNewslettersService(newsletter_repo)
+
+    newsletters = await get_all_newsletters_service.execute()
+
+    return [
+        GetAllNewslettersOutputDTO(
+            id=newsletter.id,
+            title=newsletter.title,
+            audience=[email.value for email in newsletter.audience],
+            body=newsletter.body,
+            file_uri=newsletter.file_uri,
+        )
+        for newsletter in newsletters
+    ]

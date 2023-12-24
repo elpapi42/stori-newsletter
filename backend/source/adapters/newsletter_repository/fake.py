@@ -13,3 +13,6 @@ class FakeNewsletterRepository(NewsletterRepository):
 
     async def get(self, id: UUID) -> Newsletter | None:
         return self.index.get(id)
+
+    async def get_all(self) -> list[Newsletter]:
+        return list(self.index.values())

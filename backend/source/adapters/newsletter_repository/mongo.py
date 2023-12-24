@@ -14,8 +14,6 @@ class MongoNewsletterRepository(NewsletterRepository):
     collection: AsyncIOMotorCollection = newsletters_collection
 
     async def add(self, newsletter: Newsletter) -> None:
-        # Upsert newsletter
-
         await self.collection.update_one(
             {"_id": newsletter.id},
             {"$set": {
@@ -37,3 +35,16 @@ class MongoNewsletterRepository(NewsletterRepository):
             body=newsletter["body"],
             file_uri=newsletter["file_uri"],
         )
+
+    async def get_all(self) -> list[Newsletter]:
+        newsletters = await self.collection.find().to_list(length=None)
+        return [
+            Newsletter(
+                id=newsletter["_id"],
+                title=newsletter["title"],
+                audience=[EmailAddress(value=address) for address in newsletter["audience"]],
+                body=newsletter["body"],
+                file_uri=newsletter["file_uri"],
+            )
+            for newsletter in newsletters
+        ]
