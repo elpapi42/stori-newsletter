@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     aws_access_key: str
     aws_secret_access_key: str
     frontend_url: str
+    sender_email: str
 
 
 default = Settings(_env_file='.env')

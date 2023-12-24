@@ -16,9 +16,6 @@ from source.infrastructure.aws import ses_client
 from source.infrastructure import settings
 
 
-SENDER = "whitman-2@hotmail.com"
-
-
 @dataclass
 class SESNewsletterDispatcher(NewsletterDispatcher):
     ses_client = ses_client
@@ -29,7 +26,7 @@ class SESNewsletterDispatcher(NewsletterDispatcher):
         msg = MIMEMultipart('mixed')
 
         msg['Subject'] = newsletter.title
-        msg['From'] = SENDER
+        msg['From'] = settings.default.sender_email
 
         msg_body = MIMEMultipart('alternative')
 
@@ -67,7 +64,7 @@ class SESNewsletterDispatcher(NewsletterDispatcher):
 
             try:
                 self.ses_client.send_raw_email(
-                    Source=SENDER,
+                    Source=settings.default.sender_email,
                     Destinations=[email.value],
                     RawMessage={'Data':msg.as_string()}
                 )

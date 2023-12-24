@@ -21,6 +21,7 @@ services:
       - 8081:8081
     depends_on:
       - mongo
+    restart: always
     container_name: newsletter-mongo-express
 
   backend:

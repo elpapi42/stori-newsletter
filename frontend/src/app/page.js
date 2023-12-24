@@ -1,14 +1,7 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation'
+import { redirect } from 'next/navigation';
 
 export default function Home() {
-  const router = useRouter()
-
-  const redirectToHome = async () => {
-    router.push("/newsletters")
-  };
-
-  useEffect(() => {redirectToHome();}, []);
+  redirect("/newsletters");
 
   return (
     <main>
