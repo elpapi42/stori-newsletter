@@ -12,6 +12,7 @@ from source.application.get_all_newsletters import GetAllNewslettersService
 from source.adapters.newsletter_repository.mongo import MongoNewsletterRepository
 from source.adapters.file_storage.local import LocalFileStorage
 from source.adapters.newsletter_dispatcher.fake import FakeNewsletterDispatcher
+from source.adapters.newsletter_dispatcher.ses import SESNewsletterDispatcher
 from source.application import exceptions
 
 
@@ -95,7 +96,7 @@ async def create_newsletter_file(file: UploadFile, newsletter_id: UUID):
 @router.post("/newsletter/{newsletter_id}/send", status_code=204)
 async def send_newsletter(newsletter_id: UUID):
     newsletter_repo = MongoNewsletterRepository()
-    newsletter_dispatcher = FakeNewsletterDispatcher()
+    newsletter_dispatcher = SESNewsletterDispatcher()
     send_newsletter_service = SendNewsletterService(newsletter_repo, newsletter_dispatcher)
 
     try:
