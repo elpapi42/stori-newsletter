@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from uuid import UUID
 
 from motor.motor_asyncio import AsyncIOMotorCollection
+from pymongo import DESCENDING
 
 from source.ports.newsletter_repository import NewsletterRepository
 from source.domain.newsletter import Newsletter
@@ -34,10 +35,11 @@ class MongoNewsletterRepository(NewsletterRepository):
             audience=[EmailAddress(value=address) for address in newsletter["audience"]],
             body=newsletter["body"],
             file_uri=newsletter["file_uri"],
+            created_at=newsletter["created_at"],
         )
 
     async def get_all(self) -> list[Newsletter]:
-        newsletters = await self.collection.find().to_list(length=None)
+        newsletters = await self.collection.find(sort={ 'created_at': DESCENDING }).to_list(length=None)
         return [
             Newsletter(
                 id=newsletter["_id"],
@@ -45,6 +47,7 @@ class MongoNewsletterRepository(NewsletterRepository):
                 audience=[EmailAddress(value=address) for address in newsletter["audience"]],
                 body=newsletter["body"],
                 file_uri=newsletter["file_uri"],
+                created_at=newsletter["created_at"],
             )
             for newsletter in newsletters
         ]

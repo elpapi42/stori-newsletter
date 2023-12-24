@@ -1,4 +1,5 @@
 from uuid import UUID, uuid4
+from datetime import datetime, timezone
 
 from pydantic import BaseModel, Field, ConfigDict
 
@@ -11,5 +12,6 @@ class Newsletter(BaseModel):
     audience: list[EmailAddress] = []
     body: str = ""
     file_uri: str | None = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     model_config = ConfigDict(validate_assignment=True)

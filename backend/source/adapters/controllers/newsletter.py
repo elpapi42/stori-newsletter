@@ -1,4 +1,5 @@
 from uuid import UUID
+from datetime import datetime
 
 from fastapi import APIRouter, Response, UploadFile, HTTPException
 from pydantic import BaseModel, EmailStr, Field
@@ -112,6 +113,7 @@ class GetAllNewslettersOutputDTO(BaseModel):
     audience: list[str]
     body: str
     file_uri: str | None
+    created_at: datetime
 
 
 @router.get("/newsletter", status_code=200)
@@ -128,6 +130,7 @@ async def get_all_newsletters():
             audience=[email.value for email in newsletter.audience],
             body=newsletter.body,
             file_uri=newsletter.file_uri,
+            created_at=newsletter.created_at,
         )
         for newsletter in newsletters
     ]
