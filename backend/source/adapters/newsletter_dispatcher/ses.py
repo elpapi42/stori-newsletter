@@ -10,8 +10,10 @@ from email.mime.application import MIMEApplication
 
 from source.ports.newsletter_dispatcher import NewsletterDispatcher
 from source.ports.file_storage import FileStorage
+from source.ports.unsubscribed_email_address_repository import UnsubscribedEmailAddressRepository
 from source.domain.newsletter import Newsletter
 from source.infrastructure.aws import ses_client
+from source.infrastructure import settings
 
 
 SENDER = "whitman-2@hotmail.com"
@@ -21,6 +23,7 @@ SENDER = "whitman-2@hotmail.com"
 class SESNewsletterDispatcher(NewsletterDispatcher):
     ses_client = ses_client
     file_storage: FileStorage
+    unsubscribed_email_address_repo: UnsubscribedEmailAddressRepository
 
     async def dispatch(self, newsletter: Newsletter) -> None:
         msg = MIMEMultipart('mixed')
@@ -51,7 +54,16 @@ class SESNewsletterDispatcher(NewsletterDispatcher):
             msg.attach(embeded_image)
 
         for email in newsletter.audience:
+            if await self.unsubscribed_email_address_repo.is_unsubcribed(email):
+                continue
+
             msg['To'] = email.value
+
+            unsubscribe_body = MIMEMultipart('alternative')
+            htmlpart = MIMEText(f"<html><body>If you do not want to receive newsletters, you can <a href='{settings.default.frontend_url}/unsubscribe?email={email.value}'>unsubscribe here</a>.</body></html>", 'html', "utf-8")
+            unsubscribe_body.attach(htmlpart)
+
+            msg.attach(unsubscribe_body)
 
             try:
                 self.ses_client.send_raw_email(

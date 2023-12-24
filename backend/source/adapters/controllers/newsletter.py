@@ -13,6 +13,7 @@ from source.application.get_newsletter_by_id import GetNewsletterByIdService
 from source.adapters.newsletter_repository.mongo import MongoNewsletterRepository
 from source.adapters.file_storage.local import LocalFileStorage
 from source.adapters.newsletter_dispatcher.ses import SESNewsletterDispatcher
+from source.adapters.unsubscribed_email_address_repository.mongo import MongoUnsubscribedEmailAddressRepository
 from source.application import exceptions
 
 
@@ -99,7 +100,8 @@ async def create_newsletter_file(file: UploadFile, newsletter_id: UUID):
 async def send_newsletter(newsletter_id: UUID):
     newsletter_repo = MongoNewsletterRepository()
     file_storage = LocalFileStorage()
-    newsletter_dispatcher = SESNewsletterDispatcher(file_storage)
+    unsubscribed_email_address_repo = MongoUnsubscribedEmailAddressRepository()
+    newsletter_dispatcher = SESNewsletterDispatcher(file_storage, unsubscribed_email_address_repo)
     send_newsletter_service = SendNewsletterService(newsletter_repo, newsletter_dispatcher)
 
     try:

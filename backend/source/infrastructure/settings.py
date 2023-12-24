@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     mongo_url: str
     aws_access_key: str
     aws_secret_access_key: str
+    frontend_url: str
 
 
 default = Settings(_env_file='.env')

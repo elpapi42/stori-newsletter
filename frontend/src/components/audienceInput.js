@@ -11,25 +11,21 @@ export default function AudienceInput({ emails, setEmails }) {
   const [inputEmail, setInputEmail] = useState('');
 
   const onAddEmail = () => {
-    if (!REGEX_EMAIL.test(inputEmail)) {
-      return;
-    }
+    if (!REGEX_EMAIL.test(inputEmail)) {return;}
 
-    if (!inputEmail) {
-      return;
-    }
+    if (!inputEmail) {return;}
 
-    if (emails.includes(inputEmail)) {
-      return;
-    }
+    if (emails.includes(inputEmail)) {return;}
 
     setEmails([...emails, inputEmail]);
+
+    setInputEmail('');
   }
 
   return (
     <div className="flex flex-row space-x-2 flex-wrap">
       <div className="mb-2">
-        <Input placeholder="Email" onChange={(e) => setInputEmail(e.target.value)}/>
+        <Input placeholder="Email" value={inputEmail} onChange={(e) => setInputEmail(e.target.value)}/>
       </div>
       <div className="mb-2">
         <Button text="Add" onClick={onAddEmail}/>

@@ -19,7 +19,8 @@ async def test_update_newsletter_service():
         id=newsletter.id,
         title=new_title,
         audience=[],
-        body=""
+        body="",
+        file_name=None,
     )
 
     updated_newsletter = await fake_repo.get(newsletter.id)

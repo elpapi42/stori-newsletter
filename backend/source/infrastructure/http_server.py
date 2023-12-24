@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from source.adapters.controllers.newsletter import router as newsletter_router
+from source.adapters.controllers.unsubscribe_email_address import router as unsubscribe_email_address_router
 
 
 @asynccontextmanager
@@ -16,6 +17,7 @@ app = FastAPI(lifespan=lifespan)
 
 
 app.include_router(newsletter_router)
+app.include_router(unsubscribe_email_address_router)
 
 
 app.add_middleware(

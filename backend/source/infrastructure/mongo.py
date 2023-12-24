@@ -8,3 +8,4 @@ client = AsyncIOMotorClient(settings.default.mongo_url, uuidRepresentation='stan
 default_db = client.backend
 
 newsletters_collection = default_db.newsletters
+unsubscribed_email_addresses_collection = default_db.unsubscribed_email_addresses
