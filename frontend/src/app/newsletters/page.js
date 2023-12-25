@@ -43,8 +43,6 @@ export default function NewslettersIndex() {
 
     let newsletterId = await postNewsletter(createNewsletterValue);
 
-    console.log(newsletterId);
-
     if (!newsletterId) {
       return;
     };

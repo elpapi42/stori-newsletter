@@ -39,7 +39,10 @@ export default function NewsletterDetail({ params }) {
       setAudience(response.audience);
       setBody(response.body);
       setFile(response.file_name ? {name: response.file_name} : undefined);
-      setSchedule(response.scheduled_at ? response.scheduled_at : '');
+
+      
+      var date = new Date(Date.parse(response.scheduled_at + "Z"));
+      setSchedule(response.scheduled_at ? `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}T${date.getHours()}:${date.getMinutes()}` : '');
     } catch (err) {
       console.error(err);
     }
@@ -49,7 +52,7 @@ export default function NewsletterDetail({ params }) {
 
   const onSaveNewsLetter = async () => {
     try {
-      console.log(typeof schedule);
+      var date = new Date(Date.parse(schedule))
 
       await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/newsletter/" + params.id, { 
         method: 'PATCH' ,
@@ -62,7 +65,7 @@ export default function NewsletterDetail({ params }) {
           audience: audience, 
           body: body,
           file_name: file ? file.name : null,
-          scheduled_at: schedule ? schedule : null
+          scheduled_at: schedule ? date.toISOString() : null
         }),
       });
 

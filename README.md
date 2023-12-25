@@ -36,3 +36,4 @@ If you do not want to follow the steps above, we can test the application during
 5. Extend the NewsletterRepo with batching capabilities
 6. Remove non-structured logging from fastapi
 7. Add global error handling and logging for the API
+8. Delete Newsletter feature

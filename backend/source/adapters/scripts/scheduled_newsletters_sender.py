@@ -30,7 +30,7 @@ class ScheduledNewslettersSender:
     async def run(self):
         try:
             while self.should_run:
-                current_timestamp = datetime.now(timezone.utc)
+                current_timestamp = datetime.utcnow()
                 await self.send_scheduled_newsletters_service.execute(current_timestamp)
                 await asyncio.sleep(60)
         except Exception as e:
