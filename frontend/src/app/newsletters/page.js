@@ -37,6 +37,10 @@ export default function NewslettersIndex() {
   };
 
   const onCreateNewsletter = async () => {
+    if (!createNewsletterValue) {
+      return;
+    }
+
     let newsletterId = await postNewsletter(createNewsletterValue);
 
     console.log(newsletterId);

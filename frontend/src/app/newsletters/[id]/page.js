@@ -21,7 +21,7 @@ export default function NewsletterDetail({ params }) {
   const [title, setTitle] = useState('');
   const [audience, setAudience] = useState([]);
   const [body, setBody] = useState('');
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState(undefined);
 
   const getNewsLetter = async () => {
     try {
@@ -36,7 +36,7 @@ export default function NewsletterDetail({ params }) {
       setTitle(response.title);
       setAudience(response.audience);
       setBody(response.body);
-      setFile({name: response.file_name});
+      setFile(response.file_name ? {name: response.file_name} : undefined);
     } catch (err) {
       console.error(err);
     }
@@ -62,7 +62,7 @@ export default function NewsletterDetail({ params }) {
         }),
       });
 
-      if (file) {
+      if (file?.size) {
         const formData = new FormData();
         formData.append('file', file);
         await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/newsletter/" + params.id + "/file", { 
