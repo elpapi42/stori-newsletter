@@ -3,6 +3,7 @@ from uuid import UUID
 
 from source.domain.email_address import EmailAddress
 from source.ports.unsubscribed_email_address_repository import UnsubscribedEmailAddressRepository
+from source.infrastructure.logger import Logger
 
 
 @dataclass
@@ -13,3 +14,5 @@ class UnsubscribeEmailAddressService():
         email_address = EmailAddress(value=email)
 
         await self.unsubscribed_email_address_repo.add(email_address)
+
+        Logger.info("EmailAddressUnsubscribed", email_address=email_address.value)

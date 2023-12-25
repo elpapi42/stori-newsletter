@@ -4,6 +4,7 @@ from datetime import datetime
 
 from source.domain.email_address import EmailAddress
 from source.ports.newsletter_repository import NewsletterRepository
+from source.infrastructure.logger import Logger
 from source.application import exceptions
 
 
@@ -22,6 +23,7 @@ class UpdateNewsletterService():
     ) -> None:
         newsletter = await self.newsletter_repo.get(id)
         if newsletter is None:
+            Logger.error("NewsletterToUpdateNotFound", newsletter_id=str(id))
             raise exceptions.NotFound(f"Newsletter with id {id} not found")
 
         newsletter.title = title
@@ -31,3 +33,5 @@ class UpdateNewsletterService():
         newsletter.scheduled_at = scheduled_at
 
         await self.newsletter_repo.add(newsletter)
+
+        Logger.info("NewsletterUpdated", newsletter_id=str(id))

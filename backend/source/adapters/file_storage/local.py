@@ -5,6 +5,7 @@ from io import IOBase
 
 from source.ports.file_storage import FileStorage
 from source.infrastructure import settings
+from source.infrastructure.logger import Logger
 
 
 @dataclass
@@ -19,10 +20,14 @@ class LocalFileStorage(FileStorage):
                 if not batch:
                     break
                 local_file.write(batch)
+
+        Logger.info("FileSaved", file_path=file_path)
+
         return file_path
 
     async def get_by_uri(self, uri: str) -> IOBase | None:
         if not os.path.exists(uri):
+            Logger.error("FileNotFound", file_path=uri)
             return None
 
         return open(uri, 'rb')

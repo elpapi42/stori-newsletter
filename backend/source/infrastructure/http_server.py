@@ -4,13 +4,19 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from source.adapters.scripts.scheduled_newsletters_sender import ScheduledNewslettersSender
 from source.adapters.controllers.newsletter import router as newsletter_router
 from source.adapters.controllers.unsubscribe_email_address import router as unsubscribe_email_address_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    background_newsletter_sender = ScheduledNewslettersSender()
+    await background_newsletter_sender.start()
+
     yield
+
+    await background_newsletter_sender.stop()
 
 
 app = FastAPI(lifespan=lifespan)

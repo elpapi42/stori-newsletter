@@ -1,5 +1,6 @@
 import os
 import asyncio
+from traceback import format_exc
 from dataclasses import dataclass
 
 import marko
@@ -14,6 +15,7 @@ from source.ports.unsubscribed_email_address_repository import UnsubscribedEmail
 from source.domain.newsletter import Newsletter
 from source.infrastructure.aws import ses_client
 from source.infrastructure import settings
+from source.infrastructure.logger import Logger
 
 
 @dataclass
@@ -52,6 +54,8 @@ class SESNewsletterDispatcher(NewsletterDispatcher):
 
         for email in newsletter.audience:
             if await self.unsubscribed_email_address_repo.is_unsubcribed(email):
+                # We should avoid to log PII data like email address in real world scenario
+                Logger.info("NewsletterNotSentToUnsubscribedEmail", newsletter_id=str(newsletter.id), email=email.value)
                 continue
 
             msg['To'] = email.value
@@ -69,7 +73,12 @@ class SESNewsletterDispatcher(NewsletterDispatcher):
                     RawMessage={'Data':msg.as_string()}
                 )
             except ClientError as e:
-                print(e.response['Error']['Message'])
+                Logger.error(
+                    "NewsletterDispatchFailed",
+                    newsletter_id=str(newsletter.id),
+                    error=e.response['Error']['Message'],
+                    traceback=format_exc()
+                )
 
             # My aws account is in sandbox mode,
             # so I can only send emails to verified emails and 1 per second at most.

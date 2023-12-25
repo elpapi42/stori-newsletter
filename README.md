@@ -30,3 +30,9 @@ If you do not want to follow the steps above, we can test the application during
 ## Potential Improvements
 
 1. Send emails concurrently in SESNewsletterDispatcher
+2. The MVP is fragile, the lack of testing might improve this
+3. Indexing the scheduled_at field in the DB
+4. Better handling of closing connections to the DB
+5. Extend the NewsletterRepo with batching capabilities
+6. Remove non-structured logging from fastapi
+7. Add global error handling and logging for the API

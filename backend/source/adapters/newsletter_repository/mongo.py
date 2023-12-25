@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from uuid import UUID
+from datetime import datetime
 
 from motor.motor_asyncio import AsyncIOMotorCollection
 from pymongo import DESCENDING
@@ -42,6 +43,22 @@ class MongoNewsletterRepository(NewsletterRepository):
 
     async def get_all(self) -> list[Newsletter]:
         newsletters = await self.collection.find(sort={ 'created_at': DESCENDING }).to_list(length=None)
+        return [
+            Newsletter(
+                id=newsletter["_id"],
+                title=newsletter["title"],
+                audience=[EmailAddress(value=address) for address in newsletter["audience"]],
+                body=newsletter["body"],
+                file_uri=newsletter["file_uri"],
+                file_name=newsletter["file_name"],
+                created_at=newsletter["created_at"],
+                scheduled_at=newsletter["scheduled_at"],
+            )
+            for newsletter in newsletters
+        ]
+
+    async def get_scheduled_for_timestamp(self, timestamp: datetime) -> list[Newsletter]:
+        newsletters = await self.collection.find({"scheduled_at": {"$lte": timestamp}}).to_list(length=None)
         return [
             Newsletter(
                 id=newsletter["_id"],
