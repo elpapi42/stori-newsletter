@@ -44,6 +44,7 @@ class UpdateNewsletterInputDTO(BaseModel):
     audience: list[EmailStr]
     body: str
     file_name: str | None
+    scheduled_at: datetime | None
 
 
 @router.patch("/newsletter/{newsletter_id}", status_code=204)
@@ -58,6 +59,7 @@ async def update_newsletter(data: UpdateNewsletterInputDTO, newsletter_id: UUID)
             audience=data.audience,
             body=data.body,
             file_name=data.file_name,
+            scheduled_at=data.scheduled_at,
         )
     except exceptions.NotFound:
         raise HTTPException(404, detail="Newsletter not found")
@@ -119,6 +121,7 @@ class NewsletterDTO(BaseModel):
     body: str
     file_name: str | None
     created_at: datetime
+    scheduled_at: datetime | None
 
 
 
@@ -137,6 +140,7 @@ async def get_all_newsletters():
             body=newsletter.body,
             file_name=newsletter.file_name,
             created_at=newsletter.created_at,
+            scheduled_at=newsletter.scheduled_at,
         )
         for newsletter in newsletters
     ]
@@ -159,4 +163,5 @@ async def get_newsletter_by_id(newsletter_id: UUID):
         body=newsletter.body,
         file_name=newsletter.file_name,
         created_at=newsletter.created_at,
+        scheduled_at=newsletter.scheduled_at,
     )

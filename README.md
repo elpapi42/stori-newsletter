@@ -25,4 +25,8 @@ If you want the email delivery feature to work, follow the instructions below:
 11. Add the email adress to the backend/.env file
 12. Run `docker compose up -d --build` again
 
-If you do not want to follow the steps above, we can test the applciation during the next interview.
+If you do not want to follow the steps above, we can test the application during the next interview.
+
+## Potential Improvements
+
+1. Send emails concurrently in SESNewsletterDispatcher

@@ -14,5 +14,6 @@ class Newsletter(BaseModel):
     file_uri: str | None = None
     file_name: str | None = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    scheduled_at: datetime | None = None
 
     model_config = ConfigDict(validate_assignment=True)

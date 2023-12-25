@@ -8,6 +8,7 @@ import Image from 'next/image';
 import Button from '@/components/button';
 import AudienceInput from '@/components/audienceInput';
 import Input from '@/components/input';
+import DatePicker from '@/components/datePicker';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { FilePicker } from 'evergreen-ui'
@@ -22,6 +23,7 @@ export default function NewsletterDetail({ params }) {
   const [audience, setAudience] = useState([]);
   const [body, setBody] = useState('');
   const [file, setFile] = useState(undefined);
+  const [schedule, setSchedule] = useState('');
 
   const getNewsLetter = async () => {
     try {
@@ -37,6 +39,7 @@ export default function NewsletterDetail({ params }) {
       setAudience(response.audience);
       setBody(response.body);
       setFile(response.file_name ? {name: response.file_name} : undefined);
+      setSchedule(response.scheduled_at ? response.scheduled_at : '');
     } catch (err) {
       console.error(err);
     }
@@ -46,7 +49,7 @@ export default function NewsletterDetail({ params }) {
 
   const onSaveNewsLetter = async () => {
     try {
-      console.log(file);
+      console.log(typeof schedule);
 
       await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/newsletter/" + params.id, { 
         method: 'PATCH' ,
@@ -58,7 +61,8 @@ export default function NewsletterDetail({ params }) {
           title: title, 
           audience: audience, 
           body: body,
-          file_name: file ? file.name : null
+          file_name: file ? file.name : null,
+          scheduled_at: schedule ? schedule : null
         }),
       });
 
@@ -112,14 +116,21 @@ export default function NewsletterDetail({ params }) {
       <AudienceInput emails={audience} setEmails={setAudience}/>
       <MDEditor value={body} onChange={setBody} height={500}/>
 
-      <FilePicker
-        width={400}
-        height={40}
-        placeholder={file ? file.name : "Select your Newsletter image (Optional)"}
-        accept=".png,.jpeg"
-        className="border-2 rounded-lg border-emerald-400 py-2 px-4 w-1/2 mt-4"
-        onChange={files => setFile(files[0])}
-      />
+      <div className="flex flex-row justify-between mt-4">
+        <FilePicker
+          width={400}
+          height={35}
+          placeholder={file ? file.name : "Select your Newsletter image (Optional)"}
+          accept=".png,.jpeg"
+          className="border-2 rounded-lg border-emerald-400 py-2 px-4 w-1/2"
+          onChange={files => setFile(files[0])}
+        />
+
+        <DatePicker
+          date={schedule}
+          setDate={setSchedule}
+        />
+      </div>
     </div>
   )
 }

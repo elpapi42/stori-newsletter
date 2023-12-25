@@ -37,6 +37,7 @@ class MongoNewsletterRepository(NewsletterRepository):
             file_uri=newsletter["file_uri"],
             file_name=newsletter["file_name"],
             created_at=newsletter["created_at"],
+            scheduled_at=newsletter["scheduled_at"],
         )
 
     async def get_all(self) -> list[Newsletter]:
@@ -50,6 +51,7 @@ class MongoNewsletterRepository(NewsletterRepository):
                 file_uri=newsletter["file_uri"],
                 file_name=newsletter["file_name"],
                 created_at=newsletter["created_at"],
+                scheduled_at=newsletter["scheduled_at"],
             )
             for newsletter in newsletters
         ]
