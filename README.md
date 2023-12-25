@@ -2,7 +2,7 @@
 
 1. At the root of the repo, run `sudo chmod +x init.sh`
 2. At the root of the repo, run `./init.sh`
-3. Run `docker compose up -d --build`
+3. Run `docker compose up --detach --build`
 4. Go to `http://localhost:3000``
 
 ## Warning
