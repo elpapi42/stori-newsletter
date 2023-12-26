@@ -19,7 +19,7 @@ If you want the email delivery feature to work, follow the instructions below:
 5. Create the user
 6. Create an access key for the user
 7. Copy the access key and secret key
-8. Copy the access key and secret key into the backend/.env file
+8. Paste the access key and secret key into the backend/.env file
 9. Go to AWS SES Admin Console
 10. Verify the email address you want to send emails from
 11. Add the email adress to the backend/.env file
